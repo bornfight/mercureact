@@ -42,7 +42,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "mercureact",
+  "name": "@bornfight/mercureact",
   "private": true,
   "author": {
     "email": "hello@bornfight.com",
