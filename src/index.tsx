@@ -1,82 +1,82 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 export interface SubscribeConfig {
-  topics: string[];
-  url: string;
-  token?: string;
+    topics: string[];
+    url: string;
+    token?: string;
 
-  // events
-  onOpen?: () => void;
-  onMessage?: (message: MessageEvent) => void;
-  onError?: (event: Event) => void;
+    // events
+    onOpen?: () => void;
+    onMessage?: (message: MessageEvent) => void;
+    onError?: (event: Event) => void;
 }
 
 function createUrl(baseUrl: string, topics: string[]) {
-  const url = new URL(baseUrl);
-  topics.forEach(topic => {
-    url.searchParams.append('topic', topic);
-  });
-  return url.toString();
+    const url = new URL(baseUrl);
+    topics.forEach((topic) => {
+        url.searchParams.append("topic", topic);
+    });
+    return url.toString();
 }
 
 function createEventSource({
-  url,
-  token,
+    url,
+    token,
 }: {
-  url: string;
-  token?: string;
+    url: string;
+    token?: string;
 }): EventSource {
-  if (token !== undefined && token !== '') {
-    const options = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+    if (token !== undefined && token !== "") {
+        const options = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
 
-    /**
-     * relies on eventsource polyfill which supports custom headers, unlike the standard API
-     * the polyfill adds EventSourcePolyfill constructor to window object
-     * @see https://github.com/EventSource/eventsource/#browser-polyfill
-     */
-    // todo: fix type, browse tsdx repo for custom .d.ts files
-    return new (window as any).EventSourcePolyfill(url, options);
-  }
+        /**
+         * relies on eventsource polyfill which supports custom headers, unlike the standard API
+         * the polyfill adds EventSourcePolyfill constructor to window object
+         * @see https://github.com/EventSource/eventsource/#browser-polyfill
+         */
+        // todo: fix type, browse tsdx repo for custom .d.ts files
+        return new (window as any).EventSourcePolyfill(url, options);
+    }
 
-  return new EventSource(url);
+    return new EventSource(url);
 }
 
 export const useSubscribe = ({
-  token,
-  topics,
-  url,
-  onOpen,
-  onMessage,
-  onError,
+    token,
+    topics,
+    url,
+    onOpen,
+    onMessage,
+    onError,
 }: SubscribeConfig) => {
-  const eventSource = useRef<EventSource | undefined>(undefined);
+    const eventSource = useRef<EventSource | undefined>(undefined);
 
-  useEffect(() => {
-    eventSource.current = createEventSource({
-      url: createUrl(url, topics),
-      token,
-    });
+    useEffect(() => {
+        eventSource.current = createEventSource({
+            url: createUrl(url, topics),
+            token,
+        });
 
-    if (onOpen) {
-      eventSource.current.onopen = () => onOpen();
-    }
-    if (onError) {
-      eventSource.current.onerror = event => onError(event);
-    }
-    if (onMessage) {
-      eventSource.current.onmessage = event => onMessage(event);
-    }
+        if (onOpen) {
+            eventSource.current.onopen = () => onOpen();
+        }
+        if (onError) {
+            eventSource.current.onerror = (event) => onError(event);
+        }
+        if (onMessage) {
+            eventSource.current.onmessage = (event) => onMessage(event);
+        }
 
-    return () => {
-      eventSource.current?.close();
+        return () => {
+            eventSource.current?.close();
+        };
+    }, [token, topics, url, onMessage, onError, onOpen]);
+
+    return {
+        eventSource,
     };
-  }, [token, topics, url, onMessage, onError, onOpen]);
-
-  return {
-    eventSource,
-  };
 };
