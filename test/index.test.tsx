@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { useMercure, UseMercureConfig } from '../src';
+import { useSubscribe, SubscribeConfig } from '../src';
 // @ts-ignore
 import { sources } from 'eventsourcemock';
 
@@ -7,7 +7,7 @@ const CONNECTING = 0;
 const OPEN = 1;
 const CLOSED = 2;
 
-const config: UseMercureConfig = {
+const config: SubscribeConfig = {
   url: 'https://localhost:3050/.well-known/mercure',
   topics: [
     'https://localhost:3050/foo/{id}',
@@ -17,7 +17,7 @@ const config: UseMercureConfig = {
 
 describe('useMercure', () => {
   it('should create a correct url for the EventSource', () => {
-    const { result } = renderHook(() => useMercure(config));
+    const { result } = renderHook(() => useSubscribe(config));
 
     const decodedUrl = decodeURIComponent(
       result.current.eventSource.current?.url as string
@@ -30,7 +30,7 @@ describe('useMercure', () => {
   it('should connect and disconnect correctly', () => {
     const mockOnOpen = jest.fn();
     const { result, unmount } = renderHook(() =>
-      useMercure({
+      useSubscribe({
         ...config,
         onOpen: mockOnOpen,
       })
@@ -53,7 +53,7 @@ describe('useMercure', () => {
     };
 
     const { result } = renderHook(() =>
-      useMercure({
+      useSubscribe({
         ...config,
         onMessage: message => {
           expect(message).toEqual(message);
@@ -67,7 +67,7 @@ describe('useMercure', () => {
     const mockOnError = jest.fn();
 
     const { result } = renderHook(() =>
-      useMercure({
+      useSubscribe({
         ...config,
         onError: mockOnError,
       })
@@ -81,7 +81,7 @@ describe('useMercure', () => {
 
   it('should work with token passed to config', () => {
     const { result } = renderHook(() =>
-      useMercure({
+      useSubscribe({
         ...config,
         token: 'my-test-token',
       })

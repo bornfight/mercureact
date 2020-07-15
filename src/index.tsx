@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export interface UseMercureConfig {
+export interface SubscribeConfig {
   topics: string[];
   url: string;
   token?: string;
@@ -45,14 +45,14 @@ function createEventSource({
   return new EventSource(url);
 }
 
-export const useMercure = ({
+export const useSubscribe = ({
   token,
   topics,
   url,
   onOpen,
   onMessage,
   onError,
-}: UseMercureConfig) => {
+}: SubscribeConfig) => {
   const eventSource = useRef<EventSource | undefined>(undefined);
 
   useEffect(() => {
