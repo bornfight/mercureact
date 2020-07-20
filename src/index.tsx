@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 export interface SubscribeConfig {
     topics: string[];
-    url: string;
+    url?: string;
     token?: string;
 
     // events
@@ -56,6 +56,10 @@ export const useSubscribe = ({
     const eventSource = useRef<EventSource | undefined>(undefined);
 
     useEffect(() => {
+        if (url === undefined) {
+            return;
+        }
+
         eventSource.current = createEventSource({
             url: createUrl(url, topics),
             token,
