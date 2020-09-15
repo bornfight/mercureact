@@ -10,6 +10,7 @@
     "engines": {
         "node": ">=10"
     },
+    "keywords": ["mercure", "react", "server-sent events"],
     "scripts": {
         "start": "tsdx watch",
         "build": "tsdx build",
@@ -37,7 +38,7 @@
         ]
     },
     "name": "@bornfight/mercureact",
-    "private": true,
+    "private": false,
     "author": {
         "email": "hello@bornfight.com",
         "name": "Bornfight",
