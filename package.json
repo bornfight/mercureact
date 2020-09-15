@@ -1,5 +1,5 @@
 {
-    "version": "0.1.0",
+    "version": "1.0.0",
     "license": "MIT",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
@@ -10,7 +10,11 @@
     "engines": {
         "node": ">=10"
     },
-    "keywords": ["mercure", "react", "server-sent events"],
+    "keywords": [
+        "mercure",
+        "react",
+        "server-sent events"
+    ],
     "scripts": {
         "start": "tsdx watch",
         "build": "tsdx build",
