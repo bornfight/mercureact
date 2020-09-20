@@ -27,7 +27,7 @@ const config: SubscribeConfig = useMemo(() => {
         token: "my-token",
         topics: [fooTopicc],
         onMessage: (message) => {
-            // messages are not serialized internally
+            // messages are not de-serialized internally
             const serializedMessage = message.data
                 ? JSON.parse(message.data)
                 : undefined;
